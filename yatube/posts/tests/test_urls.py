@@ -2,8 +2,9 @@ from http import HTTPStatus
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
-from posts.models import Group, Post
 from django.core.cache import cache
+from posts.models import Post
+from posts.models import Group
 
 User = get_user_model()
 
@@ -39,6 +40,9 @@ class StaticURLTests(TestCase):
             f'/posts/{self.post.id}/': 'posts/post_detail.html',
             f'/posts/{self.post.id}/edit/': 'posts/create_post.html',
             '/create/': 'posts/create_post.html',
+            f'posts/{self.post.id}/comment/': 'includes/comments.html',
+            f'profile/{self.author.username}/follow/': 'follow.html',
+            f'profile/{self.author.username}/unfollow/': 'follow.html'
         }
         for address, template in templates_url_names.items():
             with self.subTest(address=address):

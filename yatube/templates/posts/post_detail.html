@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
-{% block title %} {{title}} {% endblock %} 
+{% block title %} {{post.text}} {% endblock %} 
 {% block content %} 
 {% load thumbnail %}
 <div class="row">
@@ -42,7 +42,7 @@
         редактировать запись
       </a>
     {% endif %}
-    {% include 'posts/comments.html' %}
+    {% include 'posts/includes/comments.html' %}
   </article>
 </div>
 {% endblock %}

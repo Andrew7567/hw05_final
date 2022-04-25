@@ -20,7 +20,7 @@ def paginate(request, post_list):
 
 @cache_page(60 * 15)
 def index(request):
-    post_list = Post.objects.order_by('-pub_date')
+    post_list = Post.objects.all()
     page_obj = paginate(request, post_list)
     template = 'posts/index.html'
     context = {
@@ -50,7 +50,11 @@ def profile(request, username):
     posts = user.posts.all()
     page_obj = paginate(request, posts)
     count_posts = posts.count()
-    follows = Follow.objects.filter(user=request.user, author=user).exists()
+    if request.user.is_authenticated:
+        follows = Follow.objects.filter(user=request.user,
+                                        author=user).exists()
+    else:
+        follows = False
     # Здесь код запроса к модели и создание словаря контекста
     context = {
         'author': user,
@@ -68,13 +72,12 @@ def post_detail(request, post_id):
     form = CommentForm(request.POST or None)
     comments = post.comments.all()
     if request.method == 'POST':
-        return redirect('posts: add_comment')
+        return redirect('posts:add_comment')
     author = post.author
     author_posts = author.posts
     count_posts = author_posts.count()
     context = {
         'author': author,
-        'title': post.text,
         'post': post,
         'count_posts': count_posts,
         'form': form,

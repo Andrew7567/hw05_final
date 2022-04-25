@@ -216,3 +216,32 @@ class PaginatorViewsTest(BaseViewsTest):
             response = self.authorized_client.get(i + '?page=2')
             len_post = len(response.context['page_obj'])
             self.assertEqual(len_post, all_cnt - POSTS_ON_PAGE)
+
+
+class CacheTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user = User.objects.create_user(username='Nemo')
+        cls.post_cache = Post.objects.create(
+            author=cls.user,
+            text='Тест кеш',
+        )
+
+    def setUp(self):
+        self.authorized_client = Client()
+        self.authorized_client.force_login(self.user)
+
+    def test_cache_index(self):
+        """Тест кеша главной страницы."""
+        response = self.authorized_client.get(
+            reverse('posts:index')).content
+        self.post_cashe.delete()
+        response_cashe = self.authorized_client.get(
+            reverse('posts:index')).content
+        self.assertEqual(response, response_cashe)
+        cache.clear()
+        response_clear = self.authorized_client.get(
+            reverse('posts:index')).content
+        self.assertNotEqual(response, response_clear)

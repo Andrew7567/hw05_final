@@ -40,10 +40,13 @@ class StaticURLTests(TestCase):
             f'/posts/{self.post.id}/': 'posts/post_detail.html',
             f'/posts/{self.post.id}/edit/': 'posts/create_post.html',
             '/create/': 'posts/create_post.html',
+            f'/posts/{self.post.id}/comment/': 'posts/post_detail.html',
+            f'/profile/{self.author.username}/follow/': 'posts/follow.html',
+            f'/profile/{self.author.username}/unfollow/': 'posts/follow.html'
         }
         for address, template in templates_url_names.items():
             with self.subTest(address=address):
-                response = self.authorized_client.get(address)
+                response = self.authorized_client.get(address, follow=True)
                 self.assertTemplateUsed(response, template)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 

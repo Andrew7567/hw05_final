@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from posts.models import Group, Post, Comment, Follow
+from posts.models import Group, Post, Comment
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 User = get_user_model()
@@ -193,20 +193,3 @@ class PostFormTests(TestCase):
     def tearDownClass(cls):
         super().tearDownClass()
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
-
-
-class FollowTests(TestCase):
-    @classmethod
-    def follow_test(self):
-        Follow.objects.create(user=self.user, author=self.author)
-        self.assertTrue(Follow.objects.filter(user=self.user,
-                                              author=self.author).exists())
-
-    def unfollow_test(self):
-        Follow.objects.create(user=self.user, author=self.author)
-        self.assertTrue(Follow.objects.filter(user=self.user,
-                                              author=self.author).exists())
-        self.authorized_client.get(reverse('posts:profile_unfollow',
-                                           kwargs={'username': self.user}))
-        self.assertFalse(Follow.objects.filter(user=self.user,
-                                               author=self.author).exists())

@@ -6,7 +6,7 @@ from yatube.settings import POSTS_ON_PAGE
 from django.core.cache import cache
 
 from posts.forms import PostForm
-from posts.models import Group, Post
+from posts.models import Group, Post, Follow
 
 User = get_user_model()
 
@@ -245,3 +245,20 @@ class CacheTests(TestCase):
         response_clear = self.authorized_client.get(
             reverse('posts:index')).content
         self.assertNotEqual(response, response_clear)
+
+
+class FollowTests(TestCase):
+    @classmethod
+    def follow_test(self):
+        Follow.objects.create(user=self.user, author=self.author)
+        self.assertTrue(Follow.objects.filter(user=self.user,
+                                              author=self.author).exists())
+
+    def unfollow_test(self):
+        Follow.objects.create(user=self.user, author=self.author)
+        self.assertTrue(Follow.objects.filter(user=self.user,
+                                              author=self.author).exists())
+        self.authorized_client.get(reverse('posts:profile_unfollow',
+                                           kwargs={'username': self.user}))
+        self.assertFalse(Follow.objects.filter(user=self.user,
+                                               author=self.author).exists())

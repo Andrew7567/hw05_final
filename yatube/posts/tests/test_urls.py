@@ -40,9 +40,9 @@ class StaticURLTests(TestCase):
             f'/posts/{self.post.id}/': 'posts/post_detail.html',
             f'/posts/{self.post.id}/edit/': 'posts/create_post.html',
             '/create/': 'posts/create_post.html',
-            f'posts/{self.post.id}/comment/': 'includes/comments.html',
-            f'profile/{self.author.username}/follow/': 'follow.html',
-            f'profile/{self.author.username}/unfollow/': 'follow.html'
+            f'posts/{self.post.id}/comment/': 'posts/includes/comments.html',
+            f'profile/{self.author.username}/follow/': 'posts/follow.html',
+            f'profile/{self.author.username}/unfollow/': 'posts/follow.html'
         }
         for address, template in templates_url_names.items():
             with self.subTest(address=address):

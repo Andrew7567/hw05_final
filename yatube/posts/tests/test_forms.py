@@ -183,10 +183,10 @@ class PostFormTests(TestCase):
     def test_unauthorised_user_comment(self):
         comments_count = Comment.objects.count()
         response = self.guest_client.post(
-            reverse('posts:add_comment', kwargs={'post_id': 5}))
+            reverse('posts:add_comment', kwargs={'post_id': self.post.id}))
         self.assertRedirects(
             response, reverse('users:login') + '?next=' + reverse
-            ('posts:add_comment', kwargs={'post_id': 5}),)
+            ('posts:add_comment', kwargs={'post_id': self.post.id}),)
         self.assertEqual(Comment.objects.count(), comments_count)
 
     @classmethod

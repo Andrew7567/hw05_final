@@ -237,10 +237,10 @@ class CacheTests(TestCase):
         """Тест кеша главной страницы."""
         response = self.authorized_client.get(
             reverse('posts:index')).content
-        self.post_cashe.delete()
-        response_cashe = self.authorized_client.get(
+        self.post_cache.delete()
+        response_cache = self.authorized_client.get(
             reverse('posts:index')).content
-        self.assertEqual(response, response_cashe)
+        self.assertEqual(response, response_cache)
         cache.clear()
         response_clear = self.authorized_client.get(
             reverse('posts:index')).content

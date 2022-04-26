@@ -1,8 +1,8 @@
+from yatube.settings import POSTS_ON_PAGE
 from django import forms
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
-from yatube.settings import POSTS_ON_PAGE
 from django.core.cache import cache
 
 from posts.forms import PostForm

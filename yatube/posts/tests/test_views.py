@@ -281,4 +281,4 @@ class FollowTests(TestCase):
         )
         response = self.user.get(reverse('posts:follow_index'))
         post_1 = response.context['page_obj'][0]
-        self.assertEqual(post_1, post)
+        self.assertNotEqual(post_1, post)

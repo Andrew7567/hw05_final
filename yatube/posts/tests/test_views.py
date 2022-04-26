@@ -256,9 +256,29 @@ class FollowTests(TestCase):
 
     def unfollow_test(self):
         Follow.objects.create(user=self.user, author=self.author)
-        self.assertTrue(Follow.objects.filter(user=self.user,
-                                              author=self.author).exists())
         self.authorized_client.get(reverse('posts:profile_unfollow',
                                            kwargs={'username': self.user}))
         self.assertFalse(Follow.objects.filter(user=self.user,
                                                author=self.author).exists())
+
+    def follow_post(self):
+        Follow.objects.create(user=self.user, author=self.author)
+        post = Post.objects.create(
+            author=self.author,
+            text='Тестовый текст'
+        )
+        response = self.user.get(reverse('posts:follow_index'))
+        post_1 = response.context['page_obj'][0]
+        self.assertEqual(post_1, post)
+
+    def unfollow_post(self):
+        Follow.objects.create(user=self.user, author=self.author)
+        self.authorized_client.get(reverse('posts:profile_unfollow',
+                                           kwargs={'username': self.user}))
+        post = Post.objects.create(
+            author=self.author,
+            text='Тестовый текст'
+        )
+        response = self.user.get(reverse('posts:follow_index'))
+        post_1 = response.context['page_obj'][0]
+        self.assertEqual(post_1, post)

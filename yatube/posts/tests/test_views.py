@@ -250,21 +250,18 @@ class CacheTests(TestCase):
 class FollowTests(TestCase):
     @classmethod
     def follow_test(self):
-        first_follow = Follow.objects.first()
         follow_count = Follow.objects.count()
         self.follower = Client()
         self.follower.get(reverse('posts:profile_follow',
                                   kwargs={'username': self.user}))
-        Follow.objects.create(user=self.user, author=self.author)
+        first_follow = Follow.objects.first()
         self.assertEqual(follow_count + 1, Follow.objects.count)
         self.assertEqual(first_follow.user, self.user)
         self.assertEqual(first_follow.author, self.author)
 
     def unfollow_test(self):
         follow_count = Follow.objects.count()
-        self.follower = Client()
-        self.follower.get(reverse('posts:profile_follow',
-                                  kwargs={'username': self.user}))
+        Follow.objects.create(user=self.user, author=self.author)
         self.follower.get(reverse('posts:profile_unfollow',
                                   kwargs={'username': self.user}))
         self.assertFalse(Follow.objects.filter(user=self.user,
